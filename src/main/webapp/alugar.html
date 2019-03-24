@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="favicon.png">
+        <title>Rental Car</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <div class="collapse bg-dark" id="navbarHeader">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4 offset-md-1 py-4">
+                            <h4 class="text-white">Dados Pessoais</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-white">Minha Conta</a></li>
+                                <li><a href="Logoff" class="text-white">Sair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar navbar-dark bg-dark box-shadow">
+                <div class="container d-flex justify-content-between">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main role="main">
+            <section class="jumbotron text-center">
+                <div class="container">
+                    <h1 class="jumbotron-heading"></h1>
+                </div>
+            </section>
+            <div class="album py-5 bg-light">
+                <div class="container">
+                    <div class="result row"></div>
+                </div>
+            </div>
+        </main>
+        <footer class="text-muted">
+            <div class="container"><p class="float-right"><a href="#">Back to top</a></p></div>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"><\/script>')</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.1/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+        <script>
+            function getSession() {
+                $.get("SessionServlet", function (data) {
+                    if (data !== null || data !== undefined) {
+                        $('.jumbotron-heading').html("Olá, " + data.name + " " + data.surname + " !");
+                    }
+                    loadVeiculos(data);
+                }).done(function () {
+                    console.log("success");
+                })
+                        .fail(function (data) {
+                            console.log(data.responseText);
+                        });
+            }
+
+            function loadVeiculos(cliente) {
+                $.get("Veiculos", function (json) {
+                    var veiculos = json;
+                    for (veiculo of veiculos) {
+                        $('.result').append(cardVeiculo(veiculo, cliente));
+                    }
+                }).done(function () {
+                    console.log("success");
+                }).fail(function (data) {
+                    console.log(data.responseText);
+                });
+            }
+
+            function cardVeiculo(veiculo, cliente) {
+                var status = veiculo.status;
+                var button = '';
+                if (status === "disponible") {
+                    button = '<input type="submit" name="alugar" value="Alugar" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#myModal">';
+                } else {
+                    button = '<input type="submit" name="devolver" value="Devolver" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#myModal">';
+                }
+                html = `
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">${veiculo.categoria}</div>
+                        <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" src="${veiculo.url}" alt="Card image cap">
+                        <div class="card-body flex-fill">
+                            <p class="card-text">${veiculo.information}></p>
+                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                            <form action="AlugarServlet" method="POST" iclass="form-alugar">
+                                <input type="hidden" name="idveiculo" value="${veiculo.idveiculo}">
+                                <input type="hidden" name="idcliente" value="${cliente.id}">
+                                ${button}
+                            </form>
+                        </div>
+                    <small class="text-muted">${veiculo.price}&euro;</small>
+                    <small class="text-muted">${veiculo.modelo}</small>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+    `;
+                return html;
+            }
+
+            function myModal(data) {
+                console.log(data.msg);
+                html = `
+              <div class="modal fade">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-body">${data.msg}</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+                return html;
+            }
+
+            $(document).ready(function () {
+                getSession();
+            }
+            );
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="favicon.png">
+        <title>Rental Car</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body class="text-center">
+        <form class="form-signin"  method="post" id="signin">
+            <img class="mb-4" src="logo.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Create Account</h1>
+            <fieldset>
+                <label for="name" class="sr-only">Name</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="Name" required>   
+            </fieldset>
+            <fieldset>
+                <label for="surname" class="sr-only">Surname</label>
+                <input type="text" name="surname" id="surname" class="form-control" placeholder="Surname" required> 
+            </fieldset>
+            <fieldset>
+                <label for="email" class="sr-only">Email</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>  
+            </fieldset>
+            <fieldset>
+                <label for="password" class="sr-only">Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                <fieldset>
+                    <label for="confirmPassword" class="sr-only">Confirm Password</label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Please confirm your password" required>     
+                </fieldset>
+                <div class="checkbox mb-3"></div>
+                <div class="json-result">&nbsp;</div>
+                <button class="btn btn-lg btn-success btn-block" type="submit">Create Account</button>
+                <p class="mt-5 mb-3 text-muted">&copy; Localiza 2018</p>
+        </form>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+        <script>
+
+            function validar() {
+                $.post("CreateAccount", $("#signin").serialize(), function (json) {
+                    if (json.erro) {
+                        $(".json-result").html(json.msg);
+                    } else {
+                        $(location).attr("href", "alugar.html");
+                    }
+                }).done(function () {
+                    console.log("success");
+                })
+                        .fail(function (data) {
+                            console.log(data.responseText);
+                        });
+            }
+            $("#signin").submit(function (event) {
+                event.preventDefault();
+                validar();
+
+            });
+        </script>
+    </body>
+</html>
