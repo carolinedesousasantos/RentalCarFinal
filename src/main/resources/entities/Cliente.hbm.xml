@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 27, 2018 10:35:49 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="entities.Cliente" optimistic-lock="version" table="cliente">
+    <id name="idcliente" type="java.lang.Integer">
+      <column name="idcliente"/>
+      <generator class="identity"/>
+    </id>
+    <property name="nombre" type="string">
+      <column length="50" name="nombre" not-null="true"/>
+    </property>
+    <property name="apellido" type="string">
+      <column length="50" name="apellido" not-null="true"/>
+    </property>
+    <property name="email" type="string">
+      <column length="50" name="email" not-null="true"/>
+    </property>
+    <property name="contrasena" type="string">
+      <column length="50" name="contrasena" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="aquiladoses" table="aquilados">
+      <key>
+        <column name="idcliente" not-null="true"/>
+      </key>
+      <one-to-many class="entities.Aquilados"/>
+    </set>
+  </class>
+</hibernate-mapping>

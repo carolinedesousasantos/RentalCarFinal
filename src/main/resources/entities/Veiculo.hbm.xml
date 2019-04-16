@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 27, 2018 10:35:49 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="entities.Veiculo" optimistic-lock="version" table="veiculo">
+    <id name="idveiculo" type="java.lang.Integer">
+      <column name="idveiculo"/>
+      <generator class="identity"/>
+    </id>
+    <property name="marca" type="string">
+      <column length="30" name="marca" not-null="true"/>
+    </property>
+    <property name="modelo" type="string">
+      <column length="30" name="modelo" not-null="true"/>
+    </property>
+    <property name="status" type="string">
+      <column length="12" name="status" not-null="true"/>
+    </property>
+    <property name="url" type="string">
+      <column length="500" name="url" not-null="true"/>
+    </property>
+    <property name="categoria" type="string">
+      <column length="100" name="categoria" not-null="true"/>
+    </property>
+    <property name="price" type="float">
+      <column name="price" not-null="true"/>
+    </property>
+    <property name="information" type="string">
+      <column length="1000" name="information" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="aquiladoses" table="aquilados">
+      <key>
+        <column name="idveiculo" not-null="true"/>
+      </key>
+      <one-to-many class="entities.Aquilados"/>
+    </set>
+  </class>
+</hibernate-mapping>
