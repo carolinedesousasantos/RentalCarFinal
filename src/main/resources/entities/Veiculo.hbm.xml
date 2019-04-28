@@ -28,11 +28,11 @@
     <property name="information" type="string">
       <column length="1000" name="information" not-null="true"/>
     </property>
-    <set fetch="select" inverse="true" lazy="true" name="aquiladoses" table="aquilados">
+   <!--<set fetch="select" inverse="true" lazy="true" name="aquiladoses" table="aquilados">
       <key>
         <column name="idveiculo" not-null="true"/>
       </key>
       <one-to-many class="entities.Aquilados"/>
-    </set>
+    </set>-->
   </class>
 </hibernate-mapping>

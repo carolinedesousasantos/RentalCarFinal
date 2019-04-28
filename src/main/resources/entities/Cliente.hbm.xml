@@ -17,7 +17,7 @@
       <column length="50" name="email" not-null="true"/>
     </property>
     <property name="contrasena" type="string">
-      <column length="50" name="contrasena" not-null="true"/>
+      <column length="500" name="contrasena" not-null="true"/>
     </property>
     <set fetch="select" inverse="true" lazy="true" name="aquiladoses" table="aquilados">
       <key>

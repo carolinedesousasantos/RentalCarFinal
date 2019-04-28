@@ -28,25 +28,28 @@ public class AlugarServlet extends HttpServlet {
         ValidarResponse validarResponse = new ValidarResponse();
         SessionServlet sessionServlet = new SessionServlet();
         String statusAluguel = null;
+        String statusVeiculo;
+        String msg;
+
+
         if (request.getSession().getAttribute("clientelogado") == null) {
-            String msg = "Usuário não logado!";
+
+            msg = "Usuário não logado!";
             validarResponse.setErro(true);
             validarResponse.setMsg(msg);
-            validarResponse.setSession(sessionServlet);
+            //validarResponse.setSession(sessionServlet);
+
         } else {
             DaoVeiculoImpl daoVeiculo = new DaoVeiculoImpl();
             DaoClienteImpl daoCliente = new DaoClienteImpl();
             DaoAlugadosImpl daoAquilado = new DaoAlugadosImpl();
-            request.getParameter("idveiculo");
-            String parameter = request.getParameter("idcliente");
+
             Integer idVeiculo = Integer.parseInt(request.getParameter("idveiculo"));
             Integer idcliente = Integer.parseInt(request.getParameter("idcliente"));
             Veiculo veiculo = daoVeiculo.encontrarVeiculoporId(idVeiculo);
             Cliente cliente = daoCliente.encontrarClienteporId(idcliente);
 
-            String statusVeiculo;
-            String msg;
-            if (request.getParameter("alugar") != null && request.getParameter("alugar").equals("Alugar")) {
+            if (request.getParameter("status").equalsIgnoreCase("Alugar")) {
                 statusVeiculo = "indisponible";
                 statusAluguel = "alugado";
                 msg = "Parabéns " + cliente.getNombre() + ", seu veículo foi alugado com sucesso!";
@@ -56,8 +59,7 @@ public class AlugarServlet extends HttpServlet {
                     statusVeiculo = "disponible";
                     statusAluguel = "devolvido";
                     msg = "Obrigado(a) " + cliente.getNombre() + ", até a próxima viagem!";
-                } else {
-                    //Não estou usando, pois quando o veículo está alugado por outro usuário, o botão devolver não aparece.
+                } else{
                     String e = "Acesso negado!";
                     throw new ServletException(e);
                 }
@@ -76,8 +78,9 @@ public class AlugarServlet extends HttpServlet {
         }
 
         validarResponse.setErro(false);
-        validarResponse.setSession(sessionServlet);
+        //validarResponse.setSession(sessionServlet);
         validarResponse.setStatusAluguel(statusAluguel);
+        validarResponse.setMsg(msg);
 
         try {
             JsonUtil.jsonGenerator(response, validarResponse);

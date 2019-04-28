@@ -5,6 +5,7 @@ import dao.DaoClienteImpl;
 import dao.DaoVeiculoImpl;
 import entities.Cliente;
 import entities.Veiculo;
+import util.HibernateUtil;
 
 
 public class CriarBD {
@@ -36,5 +37,6 @@ public class CriarBD {
         if (daoCliente.listaCliente().isEmpty()) {
             daoCliente.create(new Cliente("Caroline", "Santos", "carol@carol", "Aa12345*"));
         }
+        //HibernateUtil.getSessionFactory().close();
     }
 }

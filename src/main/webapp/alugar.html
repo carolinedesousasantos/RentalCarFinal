@@ -55,18 +55,20 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
         <script>
+
             function getSession() {
                 $.get("SessionServlet", function (data) {
                     if (data !== null || data !== undefined) {
                         $('.jumbotron-heading').html("Olá, " + data.name + " " + data.surname + " !");
                     }
+                   // console.log(data);
                     loadVeiculos(data);
                 }).done(function () {
-                    console.log("success");
+                    //console.log("success");
                 })
-                        .fail(function (data) {
-                            console.log(data.responseText);
-                        });
+                .fail(function (data) {
+                   // console.log(data.responseText);
+                });
             }
 
             function loadVeiculos(cliente) {
@@ -75,6 +77,7 @@
                     for (veiculo of veiculos) {
                         $('.result').append(cardVeiculo(veiculo, cliente));
                     }
+                    console.log(cliente);
                 }).done(function () {
                     console.log("success");
                 }).fail(function (data) {
@@ -82,13 +85,40 @@
                 });
             }
 
+            function alugarDevolverClick(veiculo, cliente, status, botao ){
+                var params = { idcliente: cliente.id, idveiculo: veiculo.idveiculo, status:status };
+                console.log("alugarDevolver:", params)
+                 $.post("AlugarServlet", params, function (data) {
+                   console.log(data);
+                   //$('.result').append(cardVeiculo(veiculo, cliente));
+                     botao.value = data.statusAluguel == "alugado" ?"Devolver":"Alugar";
+                }).done(function (data) {
+                    console.log(data);
+                })
+                .fail(function (data) {
+                    console.log(data.responseText);
+                });
+            }
+
+            function atualizarVeiculos(){
+
+            }
+
             function cardVeiculo(veiculo, cliente) {
                 var status = veiculo.status;
                 var button = '';
+                var onclick = '';
+
                 if (status === "disponible") {
-                    button = '<input type="submit" name="alugar" value="Alugar" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#myModal">';
+                    onclick = "alugarDevolverClick(" +JSON.stringify(veiculo) +
+                        "," + JSON.stringify(cliente) + ",\"alugar\",this)";
+
+                    button = '<input type="button" onclick=\''  + onclick +  '\' name="alugar" value="Alugar" class="btn btn-sm btn-outline-success rentOrReturn" data-toggle="modal" data-target="#myModal" >';
                 } else {
-                    button = '<input type="submit" name="devolver" value="Devolver" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#myModal">';
+                    onclick ="alugarDevolverClick(" +JSON.stringify(veiculo) +
+                        "," + JSON.stringify(cliente) + ",\"devolver\", this)";
+
+                    button = '<input type="button" onclick=\''  + onclick +  '\'  name="devolver" value="Devolver" class="btn btn-sm btn-outline-success rentOrReturn" data-toggle="modal" data-target="#myModal">';
                 }
                 html = `
                 <div class="col-md-4">
@@ -131,9 +161,11 @@
                 return html;
             }
 
+
+
             $(document).ready(function () {
                 getSession();
-            }
+                 }
             );
 
         </script>

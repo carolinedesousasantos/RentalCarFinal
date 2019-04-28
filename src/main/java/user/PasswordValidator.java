@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
+
 import servlets.CreateAccount;
 
 public class PasswordValidator {
@@ -28,7 +28,7 @@ public class PasswordValidator {
         return message;
     }
     
-     public static String encryptOneWay(String passwordToHash, byte[] salt)
+     public static String encryptPassword(String passwordToHash, byte[] salt)
     {
         String encryptedPassword = null;
         try {
@@ -53,12 +53,12 @@ public class PasswordValidator {
     public static byte[] getSalt() throws NoSuchAlgorithmException
     {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
+        byte[] salt = new byte[]{1,1};
+       // sr.nextBytes(salt);
         return salt;
     }
     
-       public static String encryptPassword( HttpServletRequest request, String password) {
+       public static String encryptPassword( String password) {
         String passwordToHash = password;
         byte[] salt = null;
         try {
@@ -66,7 +66,7 @@ public class PasswordValidator {
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(CreateAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String securePassword = PasswordValidator.encryptOneWay(passwordToHash, salt);
+        String securePassword = PasswordValidator.encryptPassword(passwordToHash, salt);
         return securePassword;
     }
 

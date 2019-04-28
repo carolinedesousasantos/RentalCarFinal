@@ -85,6 +85,8 @@ public class DaoAlugadosImpl implements DaoAlugados {
         return podeDevolver;
     }
 
+
+
     @Override
     public void read(Aquilados t) {
         throw new UnsupportedOperationException("Not supported yet.");

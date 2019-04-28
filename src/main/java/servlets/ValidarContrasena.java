@@ -17,16 +17,16 @@ import util.JsonUtil;
 public class ValidarContrasena extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String email = request.getParameter("email");
-       String password = request.getParameter("password");
-                String securePassword = PasswordValidator.encryptPassword(request,password);
+        String password = request.getParameter("password");
+        String hashedPassword = PasswordValidator.encryptPassword( password);
         DaoClienteImpl daoCliente = new DaoClienteImpl();
-        Cliente clienteValidado = daoCliente.validarEmailSenha(email, password);
+        Cliente clienteValidado = daoCliente.validarEmailSenha(email, hashedPassword);
         ValidarResponse validarResponse = new ValidarResponse();
+
         if (clienteValidado == null) {
-            String msg = "Usuário ou senha inválidos.";
+            String msg = "Usuário  e/ou senha inválido(s).";
             validarResponse.setErro(true);
             validarResponse.setMsg(msg);
         } else {

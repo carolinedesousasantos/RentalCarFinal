@@ -33,7 +33,7 @@ public class CreateAccount extends HttpServlet {
                     request.getParameter("confirmPassword"));
             if (msg.equals("")) {
                 String password = request.getParameter("password");
-                String securePassword = PasswordValidator.encryptPassword(request, password);
+                String securePassword = PasswordValidator.encryptPassword(password);
                 cliente.setContrasena(securePassword);
                 validarEmail(cliente, request, signinResponse);
             } else {
